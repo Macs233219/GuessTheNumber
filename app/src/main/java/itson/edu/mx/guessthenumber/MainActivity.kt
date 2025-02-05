@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlin.math.max
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +33,49 @@ class MainActivity : AppCompatActivity() {
             generate.visibility = View.INVISIBLE
             guessed.visibility = View.VISIBLE
         }
-        
+
+        up.setOnClickListener {
+            minValue = num
+            if (checkingLimits()) {
+                num = Random.nextInt(minValue, maxValue)
+                guessings.setText(num.toString())
+            } else {
+                guessings.setText("No puede ser ;( me ganaste")
+            }
+        }
+
+        down.setOnClickListener {
+            maxValue = num
+            if(checkingLimits()) {
+                num = Random.nextInt(minValue, maxValue)
+                guessings.setText(num.toString())
+            } else {
+                guessings.setText(num.toString())
+            }
+        }
+
+        guessed.setOnClickListener {
+            if(!won) {
+                guessings.setText("Adivine, tu numero es el " + num)
+                guessed.setText("Volver a ")
+                won = true
+            } else {
+                generate.visibility = View.VISIBLE
+                generate.setText("Tap on generate to start")
+                guessed.visibility = View.GONE
+                resetValues()
+            }
+        }
+    }
+
+    fun resetValues() {
+        minValue = 0
+        maxValue = 100
+        num = 0
+        won = false
+    }
+
+    fun checkingLimits():Boolean {
+        return minValue != maxValue
     }
 }
